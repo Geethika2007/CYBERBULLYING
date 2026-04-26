@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberbullying Detection AI</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class='bx bx-shield-quarter logo-icon'></i>
+                <span class="logo-text">Aegis<span class="highlight">AI</span></span>
+            </div>
+            
+            <ul class="nav-links">
+                <li class="nav-item active" data-page="dashboard">
+                    <i class='bx bx-grid-alt'></i>
+                    <span>Dashboard</span>
+                </li>
+                <li class="nav-item" data-page="dataset">
+                    <i class='bx bx-data'></i>
+                    <span>Dataset</span>
+                </li>
+                <li class="nav-item" data-page="model">
+                    <i class='bx bx-chart'></i>
+                    <span>Model Performance</span>
+                </li>
+                <li class="nav-item" data-page="prediction">
+                    <i class='bx bx-terminal'></i>
+                    <span>Prediction Tool</span>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <div class="status-dot online"></div>
+                    <span>API Online</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="search-bar">
+                    <i class='bx bx-search'></i>
+                    <input type="text" placeholder="Search datasets, models, or logs...">
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn"><i class='bx bx-bell'></i><span class="badge">3</span></button>
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=38bdf8&color=fff" alt="Profile">
+                        <span>Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Container -->
+            <div class="pages-container">
+                
+                <!-- Dashboard Page View -->
+                <!-- Dashboard Page View (Summary) -->
+                <div class="page active" id="page-dashboard">
+                    <div class="page-header">
+                        <h2>System Dashboard</h2>
+                        <p>High-level overview of datasets, active model performance, and live testing.</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class='bx bx-data'></i></div>
+                            <div class="stat-details">
+                                <h3>Total Dataset Size</h3>
+                                <p class="stat-value" id="dash-total-size">0</p>
+                                <span class="trend neutral">Awaiting Upload</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon success"><i class='bx bx-check-shield'></i></div>
+                            <div class="stat-details">
+                                <h3>Model Accuracy</h3>
+                                <p class="stat-value text-success" id="dash-accuracy">--</p>
+                                <span class="trend neutral">Awaiting Training</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon alert"><i class='bx bx-error-circle'></i></div>
+                            <div class="stat-details">
+                                <h3>Cyberbullying Percentage</h3>
+                                <p class="stat-value text-danger" id="dash-toxic-pct">--</p>
+                                <span class="trend negative">Dataset Label Ratio</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-charts">
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <h3>Confusion Matrix Preview</h3>
+                                <span class="badge" id="dash-cm-badge">Untrained</span>
+                            </div>
+                            <div class="confusion-heatmap-container" style="padding: 1rem; transform: scale(0.9);">
+                                <div class="heatmap-y-label" style="left: 0;">Actual</div>
+                                <div class="heatmap-x-label" style="margin-bottom: 0.5rem;">Predicted</div>
+                                
+                                <div class="heatmap-grid" style="grid-template-columns: 80px 100px 100px; grid-template-rows: 30px 80px 80px; gap: 5px;">
+                                    <div class="hm-head empty"></div>
+                                    <div class="hm-head">Safe</div>
+                                    <div class="hm-head">Toxic</div>
+
+                                    <div class="hm-head side">Safe</div>
+                                    <div class="hm-cell" id="dash-hm-tn" style="background-color: rgba(16, 185, 129, 0.1);">
+                                        <span class="hm-val" style="font-size: 1.5rem;">-</span>
+                                        <span class="hm-desc" style="font-size: 0.65rem;">TN</span>
+                                    </div>
+                                    <div class="hm-cell" id="dash-hm-fp" style="background-color: rgba(245, 158, 11, 0.1);">
+                                        <span class="hm-val" style="font-size: 1.5rem;">-</span>
+                                        <span class="hm-desc" style="font-size: 0.65rem;">FP</span>
+                                    </div>
+
+                                    <div class="hm-head side">Toxic</div>
+                                    <div class="hm-cell" id="dash-hm-fn" style="background-color: rgba(245, 158, 11, 0.1);">
+                                        <span class="hm-val" style="font-size: 1.5rem;">-</span>
+                                        <span class="hm-desc" style="font-size: 0.65rem;">FN</span>
+                                    </div>
+                                    <div class="hm-cell" id="dash-hm-tp" style="background-color: rgba(239, 68, 68, 0.1);">
+                                        <span class="hm-val" style="font-size: 1.5rem;">-</span>
+                                        <span class="hm-desc" style="font-size: 0.65rem;">TP</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card feed-card">
+                            <div class="card-header">
+                                <h3>Quick Prediction</h3>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <textarea id="dash-quick-input" rows="4" placeholder="Type a message to test the ML model..." style="background: rgba(0,0,0,0.3); border: var(--glass-border);"></textarea>
+                            </div>
+                            <button id="dash-quick-btn" class="btn btn-primary btn-glow" style="width: 100%; justify-content: center;">
+                                <i class='bx bx-scan'></i> Check Toxicity
+                            </button>
+                            
+                            <div id="dash-quick-result" style="margin-top: 1.5rem; display: none; text-align: center; padding: 1rem; border-radius: var(--radius-md); background: rgba(0,0,0,0.2);">
+                                <div id="dash-quick-badge" class="badge" style="font-size: 1rem; padding: 8px 16px;"></div>
+                                <div id="dash-quick-score" style="margin-top: 10px; font-weight: bold; font-size: 1.2rem;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dataset Page View -->
+                <div class="page" id="page-dataset">
+                    <div class="page-header flex-between">
+                        <div>
+                            <h2>Training & Validation Datasets</h2>
+                            <p>Manage the data fueling your detection models.</p>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button id="btn-train-model" class="btn btn-success btn-glow" style="display: none;">
+                                <i class='bx bx-brain'></i> Train Model
+                            </button>
+                            <label class="btn btn-primary" style="cursor: pointer;">
+                                <i class='bx bx-upload'></i> Upload Data
+                                <input type="file" id="dataset-upload" accept=".xlsx, .xls, .csv" style="display: none;">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Dataset Stats Sections (Hidden by default) -->
+                    <div id="dataset-stats-container" style="display: none;">
+                        <div class="stats-grid mb-4">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class='bx bx-data'></i></div>
+                                <div class="stat-details">
+                                    <h3>Total Comments</h3>
+                                    <p class="stat-value" id="stat-total">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon alert"><i class='bx bx-error-circle'></i></div>
+                                <div class="stat-details">
+                                    <h3>Toxic (Bullying)</h3>
+                                    <p class="stat-value text-danger" id="stat-toxic">0</p>
+                                    <span class="trend negative" id="stat-toxic-pct">0%</span>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon success"><i class='bx bx-check-shield'></i></div>
+                                <div class="stat-details">
+                                    <h3>Normal (Safe)</h3>
+                                    <p class="stat-value text-success" id="stat-safe">0</p>
+                                    <span class="trend positive" id="stat-safe-pct">0%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dataset-charts-grid mb-4">
+                            <div class="card chart-card">
+                                <div class="card-header">
+                                    <h3>Label Distribution (Pie)</h3>
+                                </div>
+                                <div class="chart-container" style="height: 250px;">
+                                    <canvas id="datasetPieChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="card chart-card">
+                                <div class="card-header">
+                                    <h3>Toxic vs Normal (Bar)</h3>
+                                </div>
+                                <div class="chart-container" style="height: 250px;">
+                                    <canvas id="datasetBarChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dataset Preview Card -->
+                    <div class="card mb-4" id="dataset-preview-card" style="display: none;">
+                        <div class="card-header flex-between">
+                            <h3>Dataset Preview (First 10 Rows)</h3>
+                            <div style="display: flex; gap: 10px;">
+                                <span class="badge" id="meta-rows">Rows: 0</span>
+                                <span class="badge" id="meta-cols">Columns: 0</span>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table" id="preview-table">
+                                <thead>
+                                    <tr>
+                                        <th>Text</th>
+                                        <th>Label</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Dataset Name</th>
+                                        <th>Source</th>
+                                        <th>Samples</th>
+                                        <th>Class Balance (Toxic/Safe)</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Twitter Harassment v2</td>
+                                        <td>Twitter API</td>
+                                        <td>150,000</td>
+                                        <td>
+                                            <div class="balance-bar"><div class="toxic" style="width: 35%"></div><div class="safe" style="width: 65%"></div></div>
+                                        </td>
+                                        <td><span class="badge success">Active</span></td>
+                                        <td><button class="icon-btn"><i class='bx bx-dots-vertical-rounded'></i></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Wikipedia Toxicity</td>
+                                        <td>Kaggle</td>
+                                        <td>312,000</td>
+                                        <td>
+                                            <div class="balance-bar"><div class="toxic" style="width: 15%"></div><div class="safe" style="width: 85%"></div></div>
+                                        </td>
+                                        <td><span class="badge success">Active</span></td>
+                                        <td><button class="icon-btn"><i class='bx bx-dots-vertical-rounded'></i></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Reddit Hate Speech</td>
+                                        <td>Web Scrape</td>
+                                        <td>45,000</td>
+                                        <td>
+                                            <div class="balance-bar"><div class="toxic" style="width: 45%"></div><div class="safe" style="width: 55%"></div></div>
+                                        </td>
+                                        <td><span class="badge warning">Needs Review</span></td>
+                                        <td><button class="icon-btn"><i class='bx bx-dots-vertical-rounded'></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model Performance Page View -->
+                <div class="page" id="page-model">
+                    <div class="page-header flex-between">
+                        <div>
+                            <h2>Model Performance</h2>
+                            <p>Evaluation metrics for currently active BERT classification model.</p>
+                        </div>
+                        <select class="model-select">
+                            <option>Local Logistic Regression (Active)</option>
+                            <option>RoBERTa-Toxic v1.4</option>
+                        </select>
+                    </div>
+
+                    <div class="metrics-grid mb-4">
+                        <div class="card metric-card">
+                            <h4>Accuracy</h4>
+                            <div class="circular-progress" id="circ-acc" data-pct="0">
+                                <span class="progress-val">0.0%</span>
+                            </div>
+                        </div>
+                        <div class="card metric-card">
+                            <h4>Precision</h4>
+                            <div class="circular-progress" id="circ-prec" data-pct="0">
+                                <span class="progress-val">0.0%</span>
+                            </div>
+                        </div>
+                        <div class="card metric-card">
+                            <h4>Recall</h4>
+                            <div class="circular-progress" id="circ-rec" data-pct="0">
+                                <span class="progress-val">0.0%</span>
+                            </div>
+                        </div>
+                        <div class="card metric-card">
+                            <h4>F1-Score</h4>
+                            <div class="circular-progress" id="circ-f1" data-pct="0">
+                                <span class="progress-val">0.0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dataset-charts-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Metrics Summary (Bar Chart)</h3>
+                            </div>
+                            <div class="chart-container" style="height: 300px;">
+                                <canvas id="accuracyBarChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Model Evaluation Summary</h3>
+                            </div>
+                            <div class="summary-card-content" style="padding-top: 10px;">
+                                <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
+                                    This model has been trained locally using <strong>Stochastic Gradient Descent (SGD)</strong> over TF-IDF vectorized features.
+                                </p>
+                                
+                                <ul class="category-list">
+                                    <li>
+                                        <span>Test Set Accuracy</span>
+                                        <span id="summary-acc" class="cat-score text-success">--</span>
+                                    </li>
+                                    <li>
+                                        <span>True Positives (Bullying)</span>
+                                        <span id="summary-tp" class="cat-score text-danger">--</span>
+                                    </li>
+                                    <li>
+                                        <span>True Negatives (Safe)</span>
+                                        <span id="summary-tn" class="cat-score text-success">--</span>
+                                    </li>
+                                    <li>
+                                        <span>False Positives</span>
+                                        <span id="summary-fp" class="cat-score text-warning">--</span>
+                                    </li>
+                                    <li>
+                                        <span>False Negatives</span>
+                                        <span id="summary-fn" class="cat-score text-warning">--</span>
+                                    </li>
+                                </ul>
+
+                                <div class="mt-4 p-3" style="background: rgba(56, 189, 248, 0.1); border-left: 3px solid var(--accent-blue); border-radius: 4px;">
+                                    <h4 style="color: var(--accent-blue); margin-bottom: 5px; font-size: 0.9rem;">Status</h4>
+                                    <p id="summary-status" style="font-size: 0.85rem;">Awaiting dataset training pipeline execution.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h3>Confusion Matrix (Heatmap)</h3>
+                        </div>
+                        <div class="confusion-heatmap-container">
+                            <div class="heatmap-y-label">Actual Label</div>
+                            <div class="heatmap-x-label">Predicted Label</div>
+                            
+                            <div class="heatmap-grid">
+                                <div class="hm-head empty"></div>
+                                <div class="hm-head">Safe (0)</div>
+                                <div class="hm-head">Toxic (1)</div>
+
+                                <div class="hm-head side">Safe (0)</div>
+                                <div class="hm-cell" id="hm-tn" style="background-color: rgba(16, 185, 129, 0.1);">
+                                    <span class="hm-val">0</span>
+                                    <span class="hm-desc">True Negative</span>
+                                </div>
+                                <div class="hm-cell" id="hm-fp" style="background-color: rgba(245, 158, 11, 0.1);">
+                                    <span class="hm-val">0</span>
+                                    <span class="hm-desc">False Positive</span>
+                                </div>
+
+                                <div class="hm-head side">Toxic (1)</div>
+                                <div class="hm-cell" id="hm-fn" style="background-color: rgba(245, 158, 11, 0.1);">
+                                    <span class="hm-val">0</span>
+                                    <span class="hm-desc">False Negative</span>
+                                </div>
+                                <div class="hm-cell" id="hm-tp" style="background-color: rgba(239, 68, 68, 0.1);">
+                                    <span class="hm-val">0</span>
+                                    <span class="hm-desc">True Positive</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prediction Tool Page View -->
+                <div class="page" id="page-prediction">
+                    <div class="page-header">
+                        <h2>Live Prediction Tool</h2>
+                        <p>Test the model interactively by entering text below.</p>
+                    </div>
+
+                    <div class="prediction-grid">
+                        <div class="card inference-card">
+                            <div class="form-group">
+                                <label for="inference-text">Enter text to analyze:</label>
+                                <textarea id="inference-text" rows="6" placeholder="Type or paste a comment here... e.g. 'You are so pathetic and stupid.'"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button id="analyze-btn" class="btn btn-primary btn-glow">
+                                    <i class='bx bx-scan'></i> Analyze Text
+                                </button>
+                                <button id="clear-btn" class="btn btn-secondary">Clear</button>
+                            </div>
+                        </div>
+
+                        <div class="card result-card" id="result-card" style="display: none;">
+                            <div class="result-header">
+                                <h3>Analysis Result</h3>
+                                <div id="result-badge" class="badge">Processing...</div>
+                            </div>
+                            
+                            <div class="result-body">
+                                <div class="score-display">
+                                    <div class="score-label">Toxicity Probability</div>
+                                    <div class="progress-bar-container">
+                                        <div id="toxicity-bar" class="progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <div id="toxicity-value" class="score-value">0%</div>
+                                </div>
+
+                                <div class="breakdown-section mt-4">
+                                    <h4>Category Breakdown</h4>
+                                    <ul class="category-list">
+                                        <li>
+                                            <span>Insult</span>
+                                            <span id="cat-insult" class="cat-score">0.00</span>
+                                        </li>
+                                        <li>
+                                            <span>Profanity</span>
+                                            <span id="cat-profanity" class="cat-score">0.00</span>
+                                        </li>
+                                        <li>
+                                            <span>Threat</span>
+                                            <span id="cat-threat" class="cat-score">0.00</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="highlight-section mt-4">
+                                    <h4>Highlighted Triggers</h4>
+                                    <div id="highlighted-text" class="text-box">
+                                        <!-- Highlighted text will appear here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
